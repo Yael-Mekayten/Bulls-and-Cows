@@ -1,6 +1,6 @@
 import express from 'express';
 import dotenv from 'dotenv';
-import { connectToDB } from './db/connection';
+import connectToDB from './db/connection';
 import app from './app';
 dotenv.config();
 app.get('/', (req, res) => {
