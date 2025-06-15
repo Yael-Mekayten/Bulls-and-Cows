@@ -1,6 +1,7 @@
 import express from 'express';
 import dotenv from 'dotenv';
-import gameRouter from './games/game.controller.';
+import gameRouter from './games/game.controller';
+
 import playerRouter from './players/player.controller';
 
 dotenv.config();
