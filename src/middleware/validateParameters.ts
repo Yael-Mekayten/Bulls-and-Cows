@@ -45,3 +45,17 @@ export const validatePlayerUpdate = (req: Request, res: Response, next: NextFunc
 
   next();
 };
+
+
+export const validatePlayerStartGame=(req: Request, res: Response, next: NextFunction):void=> {
+  const { name, password } = req.body;
+  if (!name || typeof name !== 'string' || name.trim() === '') {
+     res.status(400).json({ error: 'Name is required and must be a non-empty string' });
+     return;
+  }
+  if (!password || typeof password !== 'string' || password.trim().length < 4) {
+   res.status(400).json({ error: 'Password is required and must be at least 4 characters' });
+   return;
+  }
+  next();
+}

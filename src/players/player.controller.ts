@@ -1,6 +1,6 @@
 import express, { Request, Response, Router } from 'express';
 import * as playerService from './player.service';
-import { validatePlayer } from '../middleware/validateParameters';
+import { validatePlayerCreate,validatePlayerUpdate } from '../middleware/validateParameters';
 
 const router: Router = express.Router();
 
@@ -26,7 +26,7 @@ router.get('/leaderboard', async (req: Request, res: Response) => {
 });
 
 // 📝 Add a new player
-router.post('/add', validatePlayer, async (req: Request, res: Response) => {
+router.post('/add', validatePlayerCreate, async (req: Request, res: Response) => {
     try {
         const { name, password, mail } = req.body;
         const player = await playerService.addPlayer({ name, password, mail });
@@ -37,7 +37,7 @@ router.post('/add', validatePlayer, async (req: Request, res: Response) => {
 });
 
 // ✏️ Edit player details
-router.put('/:playerid', validatePlayer, async (req: Request, res: Response) => {
+router.put('/:playerid', validatePlayerUpdate, async (req: Request, res: Response) => {
     try {
         const playerId = req.params.playerid;
         const updateData = req.body;

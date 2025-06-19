@@ -1,15 +1,16 @@
-import PlayerModel from './player.model';
+import Player from './player.model';
+import mongoose from "mongoose";
 
 export const addPlayer = async (data: Omit<any, '_id' | 'totalGames' | 'wins'>) => {
-  const player = new PlayerModel({ ...data, totalGames: 0, wins: 0 });
+  const player = new Player({ ...data, totalGames: 0, wins: 0 });
   return await player.save();
 };
 export const getPlayerById = async (id: string) => {
-  return await PlayerModel.findById(id).populate('games');
+  return await Player.findById(id).populate('games');
 };
 
 export const getRecentResults = async (playerId: string) => {
-  const player = await PlayerModel.findById(playerId);
+  const player = await Player.findById(playerId);
   if (!player) throw new Error('Player not found');
   
   const GameModel = require('../games/game.model').default;
@@ -27,8 +28,32 @@ export const getLeaderboard = async () => {
 };
 
 export const updatePlayer = async (id: string, updateData: Partial<any>) => {
-  return await PlayerModel.findByIdAndUpdate(id, updateData, { new: true });
+  return await Player.findByIdAndUpdate(id, updateData, { new: true });
 };
 export const deletePlayer = async (id: string) => {
-  return await PlayerModel.findByIdAndDelete(id);
+  return await Player.findByIdAndDelete(id);
 };
+
+
+
+export const getPlayerByName = async (name: string) => {
+  return await Player.findOne({ name }).exec();
+};
+
+
+export async function findPlayerByNameAndPassword(name: string, password: string) {
+  return await Player.findOne({ name, password });
+}
+
+export async function createPlayer(name: string, password: string) {
+  const newPlayer = new Player({
+    name,
+    password,
+    mail: "", // או שדה שאת תבחרי למלא
+    totalGames: 0,
+    wins: 0
+  });
+
+  return await newPlayer.save();
+}
+
