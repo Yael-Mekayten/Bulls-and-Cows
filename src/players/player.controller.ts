@@ -5,9 +5,9 @@ import { validatePlayerCreate,validatePlayerUpdate } from '../middleware/validat
 const router: Router = express.Router();
 
 // 🎯 Get recent results for a player
-router.get('/:playerid/recent', async (req: Request, res: Response) => {
+router.get('/:playerId/recent', async (req: Request, res: Response) => {
     try {
-        const playerId = req.params.playerid;
+        const playerId = req.params.playerId;
         const results = await playerService.getRecentResults(playerId);
         res.json(results);
     } catch (e: any) {

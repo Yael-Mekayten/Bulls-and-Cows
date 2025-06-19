@@ -1,6 +1,5 @@
 import Player from './player.model';
-import mongoose from "mongoose";
-
+import Game from '../games/game.model';  
 export const addPlayer = async (data: Omit<any, '_id' | 'totalGames' | 'wins'>) => {
   const player = new Player({ ...data, totalGames: 0, wins: 0 });
   return await player.save();
@@ -12,14 +11,14 @@ export const getPlayerById = async (id: string) => {
 export const getRecentResults = async (playerId: string) => {
   const player = await Player.findById(playerId);
   if (!player) throw new Error('Player not found');
-  
-  const GameModel = require('../games/game.model').default;
-  return await GameModel.find({ playerId }).sort({ createdAt: -1 }).limit(10);
+ 
+   return await Game.find({ playerId })
+    .sort({ createdAt: -1 })
+    .limit(3);
 };
 
 export const getLeaderboard = async () => {
-  const GameModel = require('../games/game.model').default;
-  const games = await GameModel.find({ status: 'won' }).sort({ attempts: 1 }).limit(10).populate('playerId');
+  const games = await Game.find({ status: 'won' }).sort({ attempts: 1 }).limit(10).populate('playerId');
   return games.map((game: any) => ({
     player: game.playerId.name,
     attempts: game.attempts.length,

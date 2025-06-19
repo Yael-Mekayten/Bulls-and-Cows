@@ -23,6 +23,25 @@ router.get("/:gameId", async (req: Request, res: Response): Promise<void> => {co
   };
 });
 
+
+router.post('/:gameId/end', async (req: Request, res: Response): Promise<void> =>  {
+  try {
+    const { gameId } = req.params;
+
+    const game = await gameService.endGame(gameId);
+
+    if (!game) {
+      res.status(404).json({ message: 'Game not found or already ended' });
+      return;
+    }
+
+    res.status(200).json({ message: 'Game ended successfully' });
+  } 
+  catch (error) {
+    res.status(500).json({ message: 'Internal server error' });
+  }
+
+});
 router.post('/start', validatePlayerStartGame, async (req: Request, res: Response): Promise<void> =>  {
   const { name, password } = req.body;
 

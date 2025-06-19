@@ -41,6 +41,19 @@ export const guessCode = async (gameId: string, guess: number[]) => {
 };
 
 
+export const endGame = async (gameId: string) =>  {
+  const game = await Game.findById(gameId);
+
+  if (!game || game.status === 'ended') {
+    return null;
+  }
+game.status = 'ended';
+
+  await game.save();
+
+  return game;
+};
+
 
 // services/gameService.ts
 
