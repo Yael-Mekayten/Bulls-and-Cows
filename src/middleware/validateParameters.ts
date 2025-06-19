@@ -1,22 +1,24 @@
+// 
 import { Request, Response, NextFunction } from 'express';
 
-export function validatePlayer(req: Request, res: Response, next: NextFunction) {
-    const { name, password, mail } = req.body;
+export const validatePlayer = (req: Request, res: Response, next: NextFunction): void => {
+  const { name, password, mail } = req.body;
 
-    // Basic required fields
-    if (!name || typeof name !== 'string') {
-        return res.status(400).json({ error: 'Name is required and must be a string' });
-    }
+  if (!name || typeof name !== 'string') {
+    res.status(400).json({ error: 'Name is required and must be a string' });
+    return;
+  }
 
-    if (!password || typeof password !== 'string' || password.length < 4) {
-        return res.status(400).json({ error: 'Password is required and must be at least 4 characters' });
-    }
+  if (!password || typeof password !== 'string' || password.length < 4) {
+    res.status(400).json({ error: 'Password must be at least 4 characters long' });
+    return;
+  }
 
-    // Basic email format check
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!mail || typeof mail !== 'string' || !emailRegex.test(mail)) {
-        return res.status(400).json({ error: 'Valid email is required' });
-    }
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!mail || typeof mail !== 'string' || !emailRegex.test(mail)) {
+    res.status(400).json({ error: 'Valid email is required' });
+    return;
+  }
 
-    next();
-}
+  next();
+};

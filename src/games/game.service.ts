@@ -1,7 +1,7 @@
 import Game from './game.model';
 import { BullPgia } from './game.logic';//מחלקה עם 2 פונקציות:אתחול מערך של ניחושים ובדיקה כמה בולים וכמה פגיעות וחזרה שלהם.
 
-export const createGame = async (playerId: string) => {
+export const startGame = async (playerId: string) => {
   const secretCode = BullPgia.generateSecretCode();
   const newGame = new Game({ playerId, secretCode });
   return await newGame.save();

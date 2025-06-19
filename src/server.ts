@@ -1,6 +1,6 @@
 import express from 'express';
 import dotenv from 'dotenv';
-import connectToDB from './db/connection';
+
 import app from './app';
 dotenv.config();
 app.get('/', (req, res) => {
@@ -12,6 +12,3 @@ app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);
 });
 
-
-connectToDB();
-//Runs the server

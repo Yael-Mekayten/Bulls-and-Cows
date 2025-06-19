@@ -1,33 +1,29 @@
 import { Request, Response, NextFunction } from 'express';
 
-export function validateGuess(req: Request, res: Response, next: NextFunction) {
-    const { guess } = req.body;
+export function validateGuess(req: Request, res: Response, next: NextFunction): void {
+  const { guess } = req.body;
 
-    // Check existence
-    if (!guess) {
-        return res.status(400).json({ error: 'Guess is required' });
-    }
+  if (!Array.isArray(guess)) {
+    res.status(400).json({ error: 'Guess must be an array of numbers' });
+    return;
+  }
 
-    // Check type and structure
-    if (!Array.isArray(guess)) {
-        return res.status(400).json({ error: 'Guess must be an array' });
-    }
+  if (guess.length !== 4) {
+    res.status(400).json({ error: 'Guess must contain exactly 4 digits' });
+    return;
+  }
 
-    if (guess.length !== 4) {
-        return res.status(400).json({ error: 'Guess must be exactly 4 digits long' });
-    }
+  const allNumbers = guess.every((num: any) => typeof num === 'number' && num >= 1 && num <= 9);
+  if (!allNumbers) {
+    res.status(400).json({ error: 'Guess must contain only digits from 1 to 9' });
+    return;
+  }
 
-    // Check all numbers and uniqueness
-    const seen = new Set<number>();
-    for (const digit of guess) {
-        if (typeof digit !== 'number' || digit < 1 || digit > 9) {
-            return res.status(400).json({ error: 'Each digit must be a number from 1 to 9' });
-        }
-        if (seen.has(digit)) {
-            return res.status(400).json({ error: 'Guess must not contain duplicate digits' });
-        }
-        seen.add(digit);
-    }
+  const uniqueDigits = new Set(guess);
+  if (uniqueDigits.size !== 4) {
+    res.status(400).json({ error: 'Guess must not contain repeated digits' });
+    return;
+  }
 
-    next();
+  next();
 }

@@ -1,11 +1,11 @@
 import express, { Request, Response, Router } from 'express';
-
 import * as playerService from './player.service';
+import { validatePlayer } from '../middleware/validateParameters';
 
 const router: Router = express.Router();
 
 // 🎯 Get recent results for a player
-router.get('/:playerid/recent', async (req: Request, res: Response): Promise<void> => {
+router.get('/:playerid/recent', async (req: Request, res: Response) => {
     try {
         const playerId = req.params.playerid;
         const results = await playerService.getRecentResults(playerId);
@@ -16,7 +16,7 @@ router.get('/:playerid/recent', async (req: Request, res: Response): Promise<voi
 });
 
 // 🏆 Get leaderboard
-router.get('/leaderboard', async (req: Request, res: Response): Promise<void> => {
+router.get('/leaderboard', async (req: Request, res: Response) => {
     try {
         const leaderboard = await playerService.getLeaderboard();
         res.json(leaderboard);
@@ -26,14 +26,10 @@ router.get('/leaderboard', async (req: Request, res: Response): Promise<void> =>
 });
 
 // 📝 Add a new player
-router.post('/add', async (req: Request, res: Response): Promise<void> => {
+router.post('/add', validatePlayer, async (req: Request, res: Response) => {
     try {
-        const { name, password } = req.body;
-        if (!name || !password) {
-            res.status(400).json({ error: 'Name and password are required' });
-            return;
-        }
-        const player = await playerService.addPlayer({ name, password });
+        const { name, password, mail } = req.body;
+        const player = await playerService.addPlayer({ name, password, mail });
         res.status(201).json(player);
     } catch (e: any) {
         res.status(500).json({ error: e.message || 'Internal server error' });
@@ -41,7 +37,7 @@ router.post('/add', async (req: Request, res: Response): Promise<void> => {
 });
 
 // ✏️ Edit player details
-router.put('/:playerid', async (req: Request, res: Response): Promise<void> => {
+router.put('/:playerid', validatePlayer, async (req: Request, res: Response) => {
     try {
         const playerId = req.params.playerid;
         const updateData = req.body;
@@ -57,7 +53,7 @@ router.put('/:playerid', async (req: Request, res: Response): Promise<void> => {
 });
 
 // 🗑️ Delete a player
-router.delete('/:playerid', async (req: Request, res: Response): Promise<void> => {
+router.delete('/:playerid', async (req: Request, res: Response) => {
     try {
         const playerId = req.params.playerid;
         const deletedPlayer = await playerService.deletePlayer(playerId);
@@ -72,7 +68,7 @@ router.delete('/:playerid', async (req: Request, res: Response): Promise<void> =
 });
 
 // 🔍 Get player by ID
-router.get('/:playerid', async (req: Request, res: Response): Promise<void> => {
+router.get('/:playerid', async (req: Request, res: Response) => {
     try {
         const playerId = req.params.playerid;
         const player = await playerService.getPlayerById(playerId);
