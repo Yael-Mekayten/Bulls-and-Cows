@@ -8,7 +8,6 @@ const router = express.Router();
 router.post('/start', async (req: Request, res: Response): Promise<void> => {
   try {
     const { playerId } = req.body;
-
     if (!playerId || typeof playerId !== 'string') {
       res.status(400).json({ error: 'playerId is required and must be a string' });
       return;

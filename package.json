@@ -13,6 +13,7 @@
     "bcrypt": "^6.0.0",
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
+    "mongodb": "^6.17.0",
     "mongoose": "^8.15.2"
   },
   "devDependencies": {
